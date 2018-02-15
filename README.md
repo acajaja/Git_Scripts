@@ -6,11 +6,17 @@ A collection of Bash scripts to automate certain repetitive Git operations.
 You can use these scripts a few different ways but regardless they MUST be executable (rwx):
 
 1. Call it directly by cd'ing to the directory it is in and:  
-      shell> ./gitApplyStash.sh <NUM>
+```BASH
+shell> ./gitApplyStash.sh <NUM>
+```
 
 2. If you have a folder in your $PATH where this script lives:  
-      shell> gitApplyStash.sh <NUM>
+```BASH
+shell> gitApplyStash.sh <NUM>
+```
 
 3. Create an alias in your shell profile (.bash_profile, .bashrc, etc):  
-      alias gtstshaply=/YOUR/PATH/TO/THIS/FILE/gitApplyStash.sh  
-      shell> gtstshaply <NUM>
+```BASH
+alias gtstshaply=/YOUR/PATH/TO/THIS/FILE/gitApplyStash.sh
+shell> gtstshaply <NUM>
+```
