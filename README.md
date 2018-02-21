@@ -17,3 +17,8 @@ shell> gitApplyStash.sh <NUM>
 alias gtstshaply=/YOUR/PATH/TO/THIS/FILE/gitApplyStash.sh
 shell> gtstshaply <NUM>
 ```
+
+Reload your profile by typing:
+```BASH
+. ~/<FILE_NAME>
+```

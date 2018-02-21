@@ -5,9 +5,9 @@ if [ "$#" -ne 1 ]; then
     exit 0
 fi
 
-echo "Are you sure you want to apply stash@{$1}? [y/n] "
+echo "Are you sure you want to apply stash@{$1}? [Y/n] "
 while read -r -n 1 -s answer; do
-    if [[ $answer != "y" ]]; then
+    if [[ $answer != "Y" ]]; then
         echo "Done "
         exit 0
     else
