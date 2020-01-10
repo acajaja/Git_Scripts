@@ -1,5 +1,11 @@
 #!/bin/bash
 
+##########
+# Author: Clif Jackson
+# Email: code@clifjackson.net
+# https://www.gnu.org/licenses/gpl.txt
+##########
+
 if [ "$#" -ne 1 ]
 then
     printf "You must supply a stash index\n"
