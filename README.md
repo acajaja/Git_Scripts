@@ -22,3 +22,14 @@ Reload your profile by typing:
 ```BASH
 . ~/<FILE_NAME>
 ```
+
+## Hooks
+The `hooks` folder (so far) contains a `pre-commit` hook that:
+
+- Runs unit tests
+- Runs the PHP linter
+- Runs the PHP Code Sniffer
+- Runs the PHP Code Sniffer Fixer if it finds fixable errors
+- Runs the PHP Compatibility check against the specified version
+
+To use it, copy in to `<YOUR-REPO-ROOT>/.git/hooks`.
