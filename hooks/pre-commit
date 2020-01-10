@@ -1,0 +1,109 @@
+#!/bin/sh
+
+##########
+# Author: Clif Jackson
+# Email: code@clifjackson.net
+# https://www.gnu.org/licenses/gpl.txt
+#
+# Dependencies:
+#   Git
+#   PHPUnit https://phpunit.de/
+#   PHP CLI
+#   PHP Code Sniffer https://github.com/squizlabs/PHP_CodeSniffer
+#   PHP Compatibility standard for PHP Code Sniffer https://github.com/PHPCompatibility/PHPCompatibility
+##########
+
+# Updated to your PHP version here
+PHPVERSION="5.6"
+
+# Run unit tests
+./vendor/bin/phpunit -c phpunit.xml
+ERR=$?
+
+if [[ $ERR -gt 0 ]]
+then
+    exit $ERR
+fi
+
+STAGED_FILES=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`
+
+if [ "$#" -eq 1 ]
+then
+    oIFS=$IFS
+    IFS='
+    '
+    SFILES="$1"
+    IFS=$oIFS
+fi
+
+# If no files were passed from Git then used the staged files
+SFILES=${SFILES:-$STAGED_FILES}
+
+# If there's no files to check then we're good
+if [ -z "$SFILES" ]
+then
+    exit 0
+fi
+
+echo "
+Running the PHP linter
+"
+
+for FILE in $SFILES
+do
+    php -l "$FILE"
+done
+
+echo "
+Running PHP Code Sniffer
+"
+
+./vendor/bin/phpcs $SFILES
+ERR=$?
+
+if [ $ERR -eq 0 ]
+then
+    echo "
+Code sniffer passed.
+
+Running PHP compatibility check for version: $PHPVERSION
+"
+
+    ./vendor/bin/phpcs -np --ignore=*/*.blade.php --standard=PHPCompatibility --runtime-set testVersion $PHPVERSION $SFILES
+
+    exit $?
+else
+    echo "Code sniffer found errors. See dev/code-sniffer-report.txt
+"
+fi
+
+if [ $ERR = 1 ]
+then
+    echo "You must manually fix the errors.
+"
+    exit $ERR
+elif [ $ERR = 2 ]
+then
+    echo "Code sniffer will attempt to auto-fix. If auto-fix fails, you must fix manually.
+Either way, be sure to 'git add' your fixed files before attempting to commit again.
+"
+    ./vendor/bin/phpcbf $SFILES
+    ./vendor/bin/phpcs $SFILES
+    ERR=$?
+fi
+
+if [ $ERR = 1 ]
+then
+    echo "There were some things that could not be auto-fixed.
+You must manually fix these errors.
+"
+    exit $ERR
+fi
+
+echo "
+Running PHP compatibility check for version: $PHPVERSION
+"
+
+./vendor/bin/phpcs -np --ignore=*/*.blade.php --standard=PHPCompatibility --runtime-set testVersion $PHPVERSION $SFILES
+
+exit $?
